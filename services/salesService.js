@@ -5,8 +5,15 @@ const getSales = async () => {
     return getAll;
 };
 
+const erroHandler = (status, message) => ({
+    status,
+    message,
+  });
+
 const getSalesById = async (id) => {
     const getSale = await model.getSalesById(id);
+
+    if (getSale.length === 0) throw erroHandler(404, 'Sale not found');
     return getSale;
 };
 

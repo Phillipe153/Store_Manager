@@ -11,14 +11,18 @@ const getProducts = async (_req, res) => {
 };
 
 const getProductsById = async (req, res) => {
-  const { id } = req.params;
-  const product = await service.getProductsById(id);
-  return res.status(OK).json(product);
+  try {
+    const { id } = req.params;
+    const product = await service.getProductsById(id);
+    return res.status(OK).json(product);
+  } catch (err) {
+    console.log(err);
+    return res.status(err.status).json({ message: err.message });
+  }
 };
 
 const postProduct = async (req, res) => {
   const { name, quantity } = req.body;
-
   await service.addProduct(name, quantity);
   return res.status(OK).json({ message: 'Produto cadastrado com sucesso' });
 };

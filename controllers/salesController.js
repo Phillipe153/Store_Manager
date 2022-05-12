@@ -6,9 +6,13 @@ const getSales = async (_req, res) => {
   };
   
   const getSalesById = async (req, res) => {
-    const { id } = req.params;
-    const sale = await service.getSalesById(id);
-    return res.status(200).json(sale);
+    try {
+      const { id } = req.params;
+      const sale = await service.getSalesById(id);
+      return res.status(200).json(sale);
+    } catch (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
   };
 
   module.exports = {

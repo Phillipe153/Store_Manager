@@ -6,8 +6,15 @@ const getProducts = async () => {
     return getAll;
 };
 
+const erroHandler = (status, message) => ({
+    status,
+    message,
+  });
 const getProductsById = async (id) => {
-    const getProduct = await model.getProductsById(id);
+    const [getProduct] = await model.getProductsById(id);
+
+    if (!getProduct) throw erroHandler(404, 'Product not found');
+
     return getProduct;
 };
 
@@ -17,7 +24,7 @@ const addProduct = async (name, quantity) => {
 };
 
 const toUpdateProduct = async (name, quantity, id) => {
-    const updatedProduct = await model.toUpdateProduct(name, quantity, id);
+    const [updatedProduct] = await model.toUpdateProduct(name, quantity, id);
     return updatedProduct;
 };
 

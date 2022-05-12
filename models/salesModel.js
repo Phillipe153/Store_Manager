@@ -30,7 +30,24 @@ const getSalesById = async (id) => {
     return allSalesInCamelCaseMode;
 };
 
+const addSale = async (productId, quantity) => {
+    const query = 'INSERT INTO StoreManager.products (product_id, quantity) VALUES (?,?)';
+    const [newProduct] = await connection.execute(query, [productId, quantity]);
+
+    return newProduct;
+};
+
+const toUpdateSale = async (productId, quantity, id) => {
+    const query = `UPDATE StoreManager.products SET products.product_id =?,
+    products.quantity =? where products.id =?`;
+
+    const updatedProduct = await connection.execute(query, [productId, quantity, id]);
+    return updatedProduct;
+};
+
 module.exports = {
     getSales,
     getSalesById,
+    addSale,
+    toUpdateSale,
   };

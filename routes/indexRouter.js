@@ -10,5 +10,7 @@ router.put('/products/:id', middlewares.validateProducts, controller.putProduct)
 
 router.get('/sales', controller.getSales);
 router.get('/sales/:id', controller.getSalesById);
+router.post('/sales', middlewares.validateSales, controller.postSale);
+router.put('/sales/:id', middlewares.validateSales, controller.putSale);
 
 module.exports = router;

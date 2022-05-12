@@ -11,11 +11,11 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.get('/ping', (req, res) => {
+app.get('/ping', (_req, res) => {
   res.status(200).json({ message: 'ping' });
 });
 
-app.use((err, req, res, _next) => {
+app.use((err, _req, res, _next) => {
   if (err.status) return res.status(err.status).json({ message: err.message });
   return res.status(500).json({ message: err.message });
 });

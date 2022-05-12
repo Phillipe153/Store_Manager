@@ -19,6 +19,8 @@ const getProductsById = async (id) => {
 };
 
 const addProduct = async (name, quantity) => {
+    console.log('2');
+
     const newProduct = await model.addProduct(name, quantity);
     return newProduct;
 };

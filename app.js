@@ -15,11 +15,10 @@ app.get('/ping', (req, res) => {
   res.status(200).json({ message: 'ping' });
 });
 
-// app.get('/products', controller.getProducts);
-// app.get('/products/:id', controller.getProductsById);
-
-// app.get('/sales', controller.getSales);
-// app.get('/sales/:id', controller.getSalesById);
+app.use((err, req, res, _next) => {
+  if (err.status) return res.status(err.status).json({ message: err.message });
+  return res.status(500).json({ message: err.message });
+});
 
 // não remova essa exportação, é para o avaliador funcionar
 // você pode registrar suas rotas normalmente, como o exemplo acima

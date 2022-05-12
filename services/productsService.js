@@ -1,15 +1,15 @@
 // Renomeie esse arquivo
 const model = require('../models/productsModel');
 
+const erroHandler = (status, message) => ({
+    status,
+    message,
+  });
 const getProducts = async () => {
     const getAll = await model.getProducts();
     return getAll;
 };
 
-const erroHandler = (status, message) => ({
-    status,
-    message,
-  });
 const getProductsById = async (id) => {
     const [getProduct] = await model.getProductsById(id);
 

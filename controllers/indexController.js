@@ -1,5 +1,5 @@
 const { getSales, getSalesById } = require('./salesController');
-const { getProducts, getProductsById, postProduct } = require('./productsController');
+const { getProducts, getProductsById, postProduct, putProduct } = require('./productsController');
     
 module.exports = {
     getProducts,
@@ -7,4 +7,5 @@ module.exports = {
     getSales,
     getSalesById,
     postProduct,
+    putProduct,
   };

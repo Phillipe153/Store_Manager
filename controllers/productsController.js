@@ -23,8 +23,17 @@ const postProduct = async (req, res) => {
   return res.status(OK).json({ message: 'Produto cadastrado com sucesso' });
 };
 
+const putProduct = async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+
+  const updatedProduct = service.toUpdateProduct(name, quantity, id);
+  return res.status(OK).json(updatedProduct);
+}; 
+
 module.exports = {
   getProducts,
   getProductsById,
   postProduct,
+  putProduct,
 };

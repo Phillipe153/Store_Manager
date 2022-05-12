@@ -11,19 +11,23 @@ const getProductsById = async (id) => {
     return getProduct;
 };
 
-const getSales = async () => {
-    const getAll = await model.getSales();
-    return getAll;
+const addProduct = async (name, quantity) => {
+    const newProduct = await model.addProduct(name, quantity);
+    return newProduct;
 };
 
-const getSalesById = async (id) => {
-    const getSale = await model.getSalesById(id);
-    return getSale;
-};
+// const getSales = async () => {
+//     const getAll = await model.getSales();
+//     return getAll;
+// };
+
+// const getSalesById = async (id) => {
+//     const getSale = await model.getSalesById(id);
+//     return getSale;
+// };
 
 module.exports = {
     getProducts,
     getProductsById,
-    getSales,
-    getSalesById,
+    addProduct,
   };

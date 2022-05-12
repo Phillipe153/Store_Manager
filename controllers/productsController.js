@@ -2,6 +2,8 @@
 // const app = require('../app');
 const service = require('../services/productsService');
 
+const OK = 200;
+
 const getProducts = async (_req, res) => {
   const allProducts = await service.getProducts();
 
@@ -11,10 +13,18 @@ const getProducts = async (_req, res) => {
 const getProductsById = async (req, res) => {
   const { id } = req.params;
   const product = await service.getProductsById(id);
-  return res.status(200).json(product);
+  return res.status(OK).json(product);
+};
+
+const postProduct = async (req, res) => {
+  const { name, quantity } = req.body;
+
+  await service.addProduct(name, quantity);
+  return res.status(OK).json({ message: 'Produto cadastrado com sucesso' });
 };
 
 module.exports = {
   getProducts,
   getProductsById,
+  postProduct,
 };

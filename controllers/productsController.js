@@ -28,17 +28,21 @@ const postProduct = async (req, res) => {
     const newProductById = await service.getProductsById(newProduct.insertId);
     return res.status(201).json(newProductById);
   } catch (err) {
-    console.log('err');
     return res.status(err.status).json({ message: err.message });
   }
 };
 
 const putProduct = async (req, res) => {
-  const { id } = req.params;
-  const { name, quantity } = req.body;
-
-  const updatedProduct = service.toUpdateProduct(name, quantity, id);
-  return res.status(OK).json(updatedProduct);
+  try {
+    const { id } = req.params;
+    const { name, quantity } = req.body;
+  
+    const updatedProduct = await service.toUpdateProduct(name, quantity, id);
+  
+    return res.status(OK).json(updatedProduct);
+  } catch (err) {
+    return res.status(err.status).json({ message: err.message });
+  }
 }; 
 
 module.exports = {

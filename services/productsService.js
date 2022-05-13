@@ -29,8 +29,12 @@ const addProduct = async (name, quantity) => {
 };
 
 const toUpdateProduct = async (name, quantity, id) => {
-    const [updatedProduct] = await model.toUpdateProduct(name, quantity, id);
-    return updatedProduct;
+    const updatedProduct = await model.toUpdateProduct(name, quantity, id);
+
+    if (!updatedProduct.productsIds.find((ID) => ID === +id)) {
+        throw erroHandler(404, 'Product not found');
+    }
+    return updatedProduct.productUpdated[0];
 };
 
 module.exports = {

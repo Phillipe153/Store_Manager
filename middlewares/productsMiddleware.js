@@ -21,6 +21,15 @@ const validateProducts = (req, res, next) => {
   next();
 };
 
+const idValidate = (req, res, next) => {
+  const { id } = req.params;
+
+  console.log(id);
+
+  next();
+};
+
 module.exports = {
   validateProducts,
+  idValidate,
 };

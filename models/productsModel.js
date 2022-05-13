@@ -22,7 +22,6 @@ const addProduct = async (name, quantity) => {
 
     const query = 'INSERT INTO StoreManager.products (name, quantity) VALUES (?,?)';
     const [newProduct] = await connection.execute(query, [name, quantity]);
-    // console.log('newProduct);
 
     return {
         newProduct,
@@ -33,9 +32,15 @@ const addProduct = async (name, quantity) => {
 const toUpdateProduct = async (name, quantity, id) => {
     const query = `UPDATE StoreManager.products SET products.name =?,
     products.quantity =? where products.id =?`;
+    await connection.execute(query, [name, quantity, id]);
 
-    const updatedProduct = await connection.execute(query, [name, quantity, id]);
-    return updatedProduct;
+    const productUpdated = await getProductsById(id);
+    const products = await getProducts();
+    const productsIds = products.map((ids) => ids.id);
+    return {
+        productUpdated,
+        productsIds,
+    };
 };
 
 module.exports = {

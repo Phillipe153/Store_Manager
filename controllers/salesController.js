@@ -20,10 +20,9 @@ const getSales = async (_req, res) => {
   const postSale = async (req, res) => {
     try {
       const { productId, quantity } = req.body;
-      const newsale = await service.addProduct(productId, quantity);
+      const newsale = await service.addSale(productId, quantity);
       return res.status(201).json(newsale);
     } catch (err) {
-      console.log('err');
       return res.status(err.status).json({ message: err.message });
     }
   };
@@ -32,8 +31,8 @@ const getSales = async (_req, res) => {
     const { id } = req.params;
     const { productId, quantity } = req.body;
   
-    const updatedProduct = service.toUpdateProduct(productId, quantity, id);
-    return res.status(OK).json(updatedProduct);
+    const updatedSale = service.toUpdateSale(productId, quantity, id);
+    return res.status(OK).json(updatedSale);
   }; 
 
   module.exports = {

@@ -8,7 +8,7 @@ const SALES = Joi.object({
 });
 
 const validateSales = (req, res, next) => {
-  const { quantity, productId } = req.body;
+  const { productId, quantity } = req.body;
 
   const { error } = SALES.validate({ productId, quantity });
   // console.log(error);

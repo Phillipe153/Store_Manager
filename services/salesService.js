@@ -18,7 +18,8 @@ const getSalesById = async (id) => {
 };
 
 const addSale = async (productId, quantity) => {
-  const newProduct = await model.addProduct(productId, quantity);
+  const newProduct = await model.addSale(productId, quantity);
+  
   return newProduct;
 };
 
@@ -27,7 +28,7 @@ const toUpdateSale = async (productId, quantity, id) => {
 
   if (getSale.length === 0) throw erroHandler(404, 'Sale not found');
 
-  const [updatedProduct] = await model.toUpdateProduct(productId, quantity, id);
+  const [updatedProduct] = await model.toUpdateSale(productId, quantity, id);
   return updatedProduct;
 };
 

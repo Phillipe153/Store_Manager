@@ -19,10 +19,13 @@ const getProductsById = async (id) => {
 };
 
 const addProduct = async (name, quantity) => {
-    console.log('2');
-
     const newProduct = await model.addProduct(name, quantity);
-    return newProduct;
+    console.log(newProduct.productsListName);
+
+    if (newProduct.productsListName.find((productName) => productName === name)) {
+        throw erroHandler(409, 'Product already exists');
+    }
+    return newProduct.newProduct;
 };
 
 const toUpdateProduct = async (name, quantity, id) => {

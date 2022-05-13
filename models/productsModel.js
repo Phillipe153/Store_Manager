@@ -16,13 +16,18 @@ const getProductsById = async (id) => {
 };
 
 const addProduct = async (name, quantity) => {
-    console.log('3');
+    const queryGetProductsName = 'select name from StoreManager.products';
+    const [productsName] = await connection.execute(queryGetProductsName);
+    const productsListName = productsName.map((nameProduct) => nameProduct.name);
 
     const query = 'INSERT INTO StoreManager.products (name, quantity) VALUES (?,?)';
     const [newProduct] = await connection.execute(query, [name, quantity]);
     // console.log('newProduct);
 
-    return newProduct;
+    return {
+        newProduct,
+        productsListName,
+    };
 };
 
 const toUpdateProduct = async (name, quantity, id) => {

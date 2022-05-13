@@ -31,18 +31,38 @@ const getSalesById = async (id) => {
 };
 
 const addSale = async (productId, quantity) => {
-    const query = 'INSERT INTO StoreManager.products (product_id, quantity) VALUES (?,?)';
-    const [newProduct] = await connection.execute(query, [productId, quantity]);
+    const queryLastSale = 'select max(id) as id from StoreManager.sales';
+    const [id] = await connection.execute(queryLastSale);
 
-    return newProduct;
+    const newId = (id[0].id) + 1;
+    const querySale = 'INSERT INTO StoreManager.sales (id) VALUES (?)';
+    await connection.execute(querySale, [newId]);
+
+    const query = `INSERT INTO StoreManager.sales_products
+     (sale_id,product_id, quantity) VALUES (?,?,?)`;
+    await connection.execute(query, [newId, productId, quantity]);
+
+    const newSaleQuery = `select product_id,
+     quantity from StoreManager.sales_products where sale_id=?`;
+    const [newSale] = await connection.execute(newSaleQuery, [newId]);
+    
+    const newSaleToReturn = {
+        id: newId,
+        ittemsSold: 
+            newSale,
+        
+    };
+    console.log(newSale);
+
+    return newSaleToReturn;
 };
 
 const toUpdateSale = async (productId, quantity, id) => {
     const query = `UPDATE StoreManager.products SET products.product_id =?,
     products.quantity =? where products.id =?`;
 
-    const updatedProduct = await connection.execute(query, [productId, quantity, id]);
-    return updatedProduct;
+    const updatedSale = await connection.execute(query, [productId, quantity, id]);
+    return updatedSale;
 };
 
 module.exports = {

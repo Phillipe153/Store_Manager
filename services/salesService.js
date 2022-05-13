@@ -17,10 +17,24 @@ const getSalesById = async (id) => {
     return getSale;
 };
 
-const addSale = async (productId, quantity) => {
-  const newProduct = await model.addSale(productId, quantity);
+const addSale = async (teste) => {
+  const newProduct = await model.addSale(teste);
+  // teste.map(async (e) => {
+    //   await addSale(e);
+    // });
+    const allSalesInCamelCaseMode = newProduct.newSale.map((sale) => ({
+      productId: sale.product_id,        
+      quantity: sale.quantity,
+    }));
+    
+    console.log(allSalesInCamelCaseMode);
+  const newSaleToReturn = {
+    id: newProduct.newId,
+    itemsSold: 
+    allSalesInCamelCaseMode,        
+};
   
-  return newProduct;
+  return newSaleToReturn;
 };
 
 const toUpdateSale = async (productId, quantity, id) => {

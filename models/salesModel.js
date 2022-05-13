@@ -30,7 +30,8 @@ const getSalesById = async (id) => {
     return allSalesInCamelCaseMode;
 };
 
-const addSale = async (productId, quantity) => {
+const addSale = async (teste) => {
+    // console.log(teste);
     const queryLastSale = 'select max(id) as id from StoreManager.sales';
     const [id] = await connection.execute(queryLastSale);
 
@@ -40,21 +41,18 @@ const addSale = async (productId, quantity) => {
 
     const query = `INSERT INTO StoreManager.sales_products
      (sale_id,product_id, quantity) VALUES (?,?,?)`;
-    await connection.execute(query, [newId, productId, quantity]);
+    const promisses = teste.map((e) => connection.execute(query, [newId, e.productId, e.quantity]));
+
+    await Promise.all(promisses);
 
     const newSaleQuery = `select product_id,
      quantity from StoreManager.sales_products where sale_id=?`;
     const [newSale] = await connection.execute(newSaleQuery, [newId]);
     
-    const newSaleToReturn = {
-        id: newId,
-        ittemsSold: 
-            newSale,
-        
+    return {
+        newId,
+        newSale,
     };
-    console.log(newSale);
-
-    return newSaleToReturn;
 };
 
 const toUpdateSale = async (productId, quantity, id) => {

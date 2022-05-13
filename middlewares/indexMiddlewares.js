@@ -1,8 +1,9 @@
 const { validateProducts, idValidate } = require('./productsMiddleware');
-const { validateSales } = require('./salesMiddleware');
+const { validateSales, postValidate } = require('./salesMiddleware');
 
 module.exports = {
     validateProducts,
     idValidate,
     validateSales,
+    postValidate,
 };

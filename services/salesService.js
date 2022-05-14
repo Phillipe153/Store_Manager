@@ -36,13 +36,25 @@ const addSale = async (teste) => {
   return newSaleToReturn;
 };
 
-const toUpdateSale = async (productId, quantity, id) => {
+const toUpdateSale = async (teste, id) => {
   const getSale = await model.getSalesById(id);
 
-  if (getSale.length === 0) throw erroHandler(404, 'Sale not found');
+    if (getSale.length === 0) throw erroHandler(404, 'Sale not found');
 
-  const [updatedProduct] = await model.toUpdateSale(productId, quantity, id);
-  return updatedProduct;
+  const [updatedProduct] = await model.toUpdateSale(teste, id);
+  
+  const allSalesInCamelCaseMode = {
+    productId: updatedProduct.product_id,        
+    quantity: updatedProduct.quantity,
+  };
+  console.log(updatedProduct);
+  
+  const updatedSaleToReturn = {
+    saleId: updatedProduct.sale_id,
+    itemUpdated: 
+    [allSalesInCamelCaseMode],        
+};
+  return updatedSaleToReturn;
 };
 
 module.exports = {

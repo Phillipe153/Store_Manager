@@ -28,13 +28,17 @@ const getSales = async (_req, res) => {
   };
   
   const putSale = async (req, res) => {
-    const { id } = req.params;
-    const { productId, quantity } = req.body;
-  
-    const updatedSale = service.toUpdateSale(productId, quantity, id);
-    return res.status(OK).json(updatedSale);
+    try {
+      const { id } = req.params;
+      const teste = req.body;
+    
+      const updatedSale = await service.toUpdateSale(teste, id);
+      return res.status(OK).json(updatedSale);
+    } catch (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
   }; 
-
+  
   module.exports = {
     getSales,
     getSalesById,

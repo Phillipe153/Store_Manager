@@ -12,6 +12,6 @@ router.delete('/products/:id', controller.deleteProduct);
 router.get('/sales', controller.getSales);
 router.get('/sales/:id', controller.getSalesById);
 router.post('/sales', middlewares.postValidate, controller.postSale);
-router.put('/sales/:id', middlewares.validateSales, controller.putSale);
+router.put('/sales/:id', controller.putSale);
 
 module.exports = router;

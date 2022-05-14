@@ -31,7 +31,6 @@ const getSalesById = async (id) => {
 };
 
 const addSale = async (teste) => {
-    // console.log(teste);
     const queryLastSale = 'select max(id) as id from StoreManager.sales';
     const [id] = await connection.execute(queryLastSale);
 
@@ -41,9 +40,9 @@ const addSale = async (teste) => {
 
     const query = `INSERT INTO StoreManager.sales_products
      (sale_id,product_id, quantity) VALUES (?,?,?)`;
-    const promisses = teste.map((e) => connection.execute(query, [newId, e.productId, e.quantity]));
+    const promises = teste.map((e) => connection.execute(query, [newId, e.productId, e.quantity]));
 
-    await Promise.all(promisses);
+    await Promise.all(promises);
 
     const newSaleQuery = `select product_id,
      quantity from StoreManager.sales_products where sale_id=?`;

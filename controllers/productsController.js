@@ -23,7 +23,6 @@ const getProductsById = async (req, res) => {
 const postProduct = async (req, res) => {
   try {
     const { name, quantity } = req.body;
-    console.log('1');
     const newProduct = await service.addProduct(name, quantity);
     const newProductById = await service.getProductsById(newProduct.insertId);
     return res.status(201).json(newProductById);
@@ -45,9 +44,23 @@ const putProduct = async (req, res) => {
   }
 }; 
 
+const deleteProduct = async (req, res) => {
+  console.log('chamou controller');
+  try {
+    const { id } = req.params;
+    console.log(id);
+    await service.deleteProduct(id);
+    return res.status(204).json({});
+  } catch (err) {
+    console.log('chmaou err');
+    return res.status(err.status).json({ message: err.message });
+  }
+};
+
 module.exports = {
   getProducts,
   getProductsById,
   postProduct,
   putProduct,
+  deleteProduct,
 };

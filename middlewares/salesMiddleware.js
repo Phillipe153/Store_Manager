@@ -11,7 +11,6 @@ const validateSales = (req, res, next) => {
   const { productId, quantity } = req.body;
 
   const { error } = SALES.validate({ productId, quantity });
-  // console.log(error);
   if (error) {
     if (error.details[0].type === 'number.min') {
       return next({ status: 422, message: error.message });
@@ -24,11 +23,7 @@ const validateSales = (req, res, next) => {
 
 const postValidate = (req, res, next) => {
   const teste = req.body;
-  // console.log(teste);
-  // console.log(SALES.validate(teste.map((e) => e)));
   const erro = teste.find((e) => SALES.validate(e).error);
-  console.log(erro);
-  // const { error } = SALES.validate(teste[0].map((e) => e));
   const { error } = SALES.validate(erro); 
   if (error) {
     if (error.details[0].type === 'number.min') {

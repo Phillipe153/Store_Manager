@@ -27,7 +27,6 @@ const addSale = async (teste) => {
       quantity: sale.quantity,
     }));
     
-    console.log(allSalesInCamelCaseMode);
   const newSaleToReturn = {
     id: newProduct.newId,
     itemsSold: 

@@ -20,7 +20,6 @@ const getProductsById = async (id) => {
 
 const addProduct = async (name, quantity) => {
     const newProduct = await model.addProduct(name, quantity);
-    console.log(newProduct.productsListName);
 
     if (newProduct.productsListName.find((productName) => productName === name)) {
         throw erroHandler(409, 'Product already exists');
@@ -37,9 +36,22 @@ const toUpdateProduct = async (name, quantity, id) => {
     return updatedProduct.productUpdated[0];
 };
 
+const deleteProduct = async (id) => {
+    console.log('chamou service');
+    const findProduct = await model.getProducts();
+    console.log(findProduct);
+    
+    if (!findProduct.find((ID) => ID.id === +id)) {
+        throw erroHandler(404, 'Product not found');
+    }
+    const productToDelete = await model.deleteProduct(id);
+    return productToDelete;
+};
+
 module.exports = {
     getProducts,
     getProductsById,
     addProduct,
     toUpdateProduct,
+    deleteProduct,    
   };

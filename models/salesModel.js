@@ -56,14 +56,15 @@ const addSale = async (teste) => {
 
 const toUpdateSale = async (teste, id) => {
     const query = `UPDATE StoreManager.sales_products SET sales_products.product_id =?,
-    sales_products.quantity =? WHERE sales_products.sale_id =?`;
+    sales_products.quantity =? WHERE sales_products.sale_id =? AND sales_products.product_id=?`;
 
-    await connection.execute(query, [teste[0].productId, teste[0].quantity, id]);
+    await connection
+    .execute(query, [teste[0].productId, teste[0].quantity, id, teste[0].productId]);
 
     const queryUpdatesProducts = `SELECT sp.*, sa.date FROM StoreManager.sales_products AS sp
     INNER JOIN StoreManager.sales AS sa ON sp.sale_id = sa.id
-    ORDER BY sale_id, product_id`;
-    const [updatesProductsToReturn] = await connection.execute(queryUpdatesProducts, [id]);
+    WHERE sale_id =? AND product_id=?`;
+    const [updatesProductsToReturn] = await connection.execute(queryUpdatesProducts, [id, teste[0].productId]);
     console.log(updatesProductsToReturn);
     return updatesProductsToReturn;
 };

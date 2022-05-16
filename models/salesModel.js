@@ -52,7 +52,7 @@ const addSale = async (teste) => {
     await Promise.all(promises, productQuantity);
 
     const newSaleQuery = `select product_id,
-     quantity from StoreManager.sales_products where sale_id=?`;
+     quantity from StoreManager.sales_products where sale_id=?  order by product_id`;
     const [newSale] = await connection.execute(newSaleQuery, [newId]);
     
     return { newId, newSale };

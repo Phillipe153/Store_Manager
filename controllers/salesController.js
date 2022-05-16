@@ -38,10 +38,23 @@ const getSales = async (_req, res) => {
       return res.status(err.status).json({ message: err.message });
     }
   }; 
+
+  const deleteSale = async (req, res) => {
+    try {
+      const { id } = req.params;
+      console.log(id);
+      await service.deleteSale(id);
+      return res.status(204).json({});
+    } catch (err) {
+      console.log('chmaou err');
+      return res.status(err.status).json({ message: err.message });
+    }
+  };
   
   module.exports = {
     getSales,
     getSalesById,
     postSale,
     putSale,
+    deleteSale,
   };

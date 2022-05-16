@@ -64,9 +64,19 @@ const toUpdateSale = async (teste, id) => {
     const queryUpdatesProducts = `SELECT sp.*, sa.date FROM StoreManager.sales_products AS sp
     INNER JOIN StoreManager.sales AS sa ON sp.sale_id = sa.id
     WHERE sale_id =? AND product_id=?`;
-    const [updatesProductsToReturn] = await connection.execute(queryUpdatesProducts, [id, teste[0].productId]);
+    const [updatesProductsToReturn] = await connection
+    .execute(queryUpdatesProducts, [id, teste[0].productId]);
     console.log(updatesProductsToReturn);
     return updatesProductsToReturn;
+};
+
+const deleteSale = async (id) => {
+    const query = 'DELETE FROM StoreManager.sales_products WHERE sale_id=?';
+    await connection.execute(query, [id]);
+
+    const Sales = await getSales();
+    const SalesIds = Sales.map((ids) => ids.sale_id);
+    return SalesIds;
 };
 
 module.exports = {
@@ -74,4 +84,5 @@ module.exports = {
     getSalesById,
     addSale,
     toUpdateSale,
+    deleteSale,
   };

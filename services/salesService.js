@@ -59,7 +59,6 @@ const toUpdateSale = async (teste, id) => {
 
 const deleteSale = async (id) => {
   const findSale = await model.getSales();
-  console.log(findSale);
   
   if (!findSale.find((ID) => ID.saleId === +id)) {
       throw erroHandler(404, 'Sale not found');

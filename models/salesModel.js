@@ -1,4 +1,5 @@
 const connection = require('./connection');
+const model = require('./productsModel');
 
 const getSales = async () => {
     const query = `SELECT sp.*, sa.date FROM StoreManager.sales_products AS sp
@@ -41,25 +42,33 @@ const addSale = async (teste) => {
     const query = `INSERT INTO StoreManager.sales_products
      (sale_id,product_id, quantity) VALUES (?,?,?)`;
     const promises = teste.map((e) => connection.execute(query, [newId, e.productId, e.quantity]));
+   
+    const [currPoductQuant] = await model.getProductsById(teste[0].productId);
+    console.log(currPoductQuant.quantity);
+    const queryUpdateProductQuantity = 'UPDATE StoreManager.products SET products.quantity=?';
+    const productQuantity = connection
+    .execute(queryUpdateProductQuantity, [teste[0].quantity]);
 
-    await Promise.all(promises);
+    await Promise.all(promises, productQuantity);
 
     const newSaleQuery = `select product_id,
      quantity from StoreManager.sales_products where sale_id=?`;
     const [newSale] = await connection.execute(newSaleQuery, [newId]);
     
-    return {
-        newId,
-        newSale,
-    };
+    return { newId, newSale };
 };
 
 const toUpdateSale = async (teste, id) => {
     const query = `UPDATE StoreManager.sales_products SET sales_products.product_id =?,
     sales_products.quantity =? WHERE sales_products.sale_id =? AND sales_products.product_id=?`;
-
     await connection
     .execute(query, [teste[0].productId, teste[0].quantity, id, teste[0].productId]);
+
+    const [currPoductQuant] = await model.getProductsById(teste[0].productId);
+    console.log(currPoductQuant.quantity);
+    const queryUpdateProductQuantity = 'UPDATE StoreManager.products SET products.quantity=?';
+    await connection
+    .execute(queryUpdateProductQuantity, [currPoductQuant.quantity + teste[0].quantity]);
 
     const queryUpdatesProducts = `SELECT sp.*, sa.date FROM StoreManager.sales_products AS sp
     INNER JOIN StoreManager.sales AS sa ON sp.sale_id = sa.id
@@ -71,6 +80,18 @@ const toUpdateSale = async (teste, id) => {
 };
 
 const deleteSale = async (id) => {
+    const salesId = await getSalesById(id);
+    const productId = salesId.map((e) => ({ id: e.productId, quant: e.quantity }));
+    
+    productId.forEach(async (e) => {
+        console.log(e);
+       const [quantityById] = await model.getProductsById(e.id);
+        const queryUpdateProductQuantity = `UPDATE StoreManager.products SET products.quantity=?
+        where id=?`;
+        connection
+        .execute(queryUpdateProductQuantity, [quantityById.quantity + e.quant, e.id]);
+    });
+    
     const query = 'DELETE FROM StoreManager.sales_products WHERE sale_id=?';
     await connection.execute(query, [id]);
 

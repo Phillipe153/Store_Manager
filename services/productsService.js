@@ -39,7 +39,7 @@ const toUpdateProduct = async (name, quantity, id) => {
 const deleteProduct = async (id) => {
     console.log('chamou service');
     const findProduct = await model.getProducts();
-    console.log(findProduct);
+    // console.log(findProduct);
     
     if (!findProduct.find((ID) => ID.id === +id)) {
         throw erroHandler(404, 'Product not found');

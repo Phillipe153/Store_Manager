@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const connection = require('../../models/connection');
-const getProducts = require('../../models/productsModel');
+const getProducts = require('../../services/productsService');
 
 describe('Busca os produtos cadastrados', () => {
     describe('Quando nao retorna nenhum produto', () => {
@@ -25,8 +25,7 @@ describe('Busca os produtos cadastrados', () => {
             expect(result).to.be.empty;
         });
     });
-
-       describe('Quando existe produtos cadastrados', () => {
+    describe('Quando existe produtos cadastrados', () => {
 
         const resultExecute = [{
             id: 1,
@@ -42,8 +41,6 @@ describe('Busca os produtos cadastrados', () => {
             connection.execute.restore();
         })
 
-        // it('retorna um array', () => {});
-        // it('retorna um array nao vazio', () => {});
         it('retorna um array que possui objetos', async () => {
             const [result] = await getProducts.getProducts();
 
@@ -78,12 +75,12 @@ describe('Busca os produtos cadastrados', () => {
         // it('retorna um array', () => {});
         // it('retorna um array nao vazio', () => {});
         it('retorna um array que possui objetos', async () => {
-            const [result] = await getProducts.getProductsById(1);
+            const result = await getProducts.getProductsById(1);
 
             expect(result).to.be.an('object');
         });
         it('o objeto possui os atributos id, name e quantity ', async () => {
-            const [result] = await getProducts.getProductsById(1);
+            const result = await getProducts.getProductsById(1);
 
             expect(result).to.be.includes.all.keys(
                 'id',
@@ -124,29 +121,40 @@ describe('Busca os produtos cadastrados', () => {
         it('retorna um array que possui objetos', async () => {
             const result = await getProducts.addProduct();
 
-            expect(result.newProduct).to.be.length(2);
+            expect(result).to.be.length(2);
         });
-        it('o objeto possui os atributos telefone e Marreta do chapolin ', async () => {
-            const result = await getProducts.addProduct();
+        // it('o objeto possui os atributos telefone e Marreta do chapolin ', async () => {
+        //     const result = await getProducts.addProduct();
 
-            expect(result.productsListName[0]).to.equal(
-                'telefone',
-            );
-            expect(result.productsListName[1]).to.equal(
-                'Marreta do chapolin'
-            );
-        })
+        //     expect(result.productsListName[0]).to.equal(
+        //         'telefone',
+        //     );
+        //     expect(result.productsListName[1]).to.equal(
+        //         'Marreta do chapolin'
+        //     );
+        // })
     })
     describe('Verifica se é possivel deletar um produto', () => {
 
-        const newProduct = [{
+        const resultExecute = [{
             id: 1,
             name: 'telefone',
             quantity: 10,
-        }];
+        },
+        {
+            id: 2,
+            name: "Marreta do chapolin",
+            quantity: 5
+        }]
+
+        const newProduct = {
+            "id": 2,
+            "name": "Marreta do chapolin",
+            "quantity": 5
+        }
 
         before(() => {
-            sinon.stub(connection, 'execute').resolves([ newProduct]);
+            sinon.stub(connection, 'execute').resolves([resultExecute, newProduct]);
         });
 
         after(() => {
@@ -157,15 +165,15 @@ describe('Busca os produtos cadastrados', () => {
         // it('retorna um array nao vazio', () => {});
         it('retorna um array que possui objetos', async () => {
             const result = await getProducts.deleteProduct(2);
-            console.log(result);
+            console.log(newProduct);
 
             expect(result).to.be.length(1);
         });
         it('o objeto possui os atributos telefone e Marreta do chapolin ', async () => {
             const [result] = await getProducts.deleteProduct(2);
 
-            expect(result).to.equal(
-                1,
+            expect(result.name).to.equal(
+                'telefone',
             );
         })
     })

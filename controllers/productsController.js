@@ -45,7 +45,6 @@ const putProduct = async (req, res) => {
 }; 
 
 const deleteProduct = async (req, res) => {
-  console.log('chamou controller');
   try {
     const { id } = req.params;
     console.log(id);

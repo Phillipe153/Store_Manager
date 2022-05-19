@@ -49,6 +49,7 @@ const deleteProduct = async (id) => {
 
     const products = await getProducts();
     const productsIds = products.map((ids) => ids.id);
+    // console.log(productsIds);
     return productsIds;
 };
 

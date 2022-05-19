@@ -7,6 +7,7 @@ const OK = 200;
 const getProducts = async (_req, res) => {
   const allProducts = await service.getProducts();
 
+  console.log(res.status);
   return res.status(200).json(allProducts);
 };
 

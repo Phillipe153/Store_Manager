@@ -21,6 +21,7 @@ const getSales = async (_req, res) => {
     try {
       const teste = req.body;
       const newsale = await service.addSale(teste);
+      console.log(newsale);
       return res.status(201).json(newsale);
     } catch (err) {
       return res.status(err.status).json({ message: err.message });

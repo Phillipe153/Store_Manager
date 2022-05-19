@@ -45,6 +45,7 @@ const deleteProduct = async (id) => {
         throw erroHandler(404, 'Product not found');
     }
     const productToDelete = await model.deleteProduct(id);
+    console.log(productToDelete);
     return productToDelete;
 };
 

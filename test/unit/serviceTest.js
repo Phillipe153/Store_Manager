@@ -1,204 +1,209 @@
-const { expect } = require('chai');
-const sinon = require('sinon');
-const connection = require('../../models/connection');
-const getProducts = require('../../services/productsService');
+// const { expect } = require('chai');
+// const sinon = require('sinon');
+// const connection = require('../../models/connection');
+// const getProducts = require('../../models/productsModel');
+// const teste = require('../../services/productsService');
 
-describe('Busca os produtos cadastrados', () => {
-    describe('Quando nao retorna nenhum produto', () => {
+// describe('Service: Busca os produtos cadastrados', () => {
+//     describe('Quando nao retorna nenhum produto', () => {
 
-        const resultExecute = []
-        before(() => {
-            sinon.stub(connection, 'execute').resolves([resultExecute]);
-        });
-        after(() => {
-            connection.execute.restore()
-        })
+//         const resultExecute = []
+//         before(() => {
+//             sinon.stub(teste, 'getProducts').resolves([resultExecute]);
+//         });
+//         after(() => {
+//             teste.getProducts.restore()
+//         })
 
-        it('retorna um array', async () => {
-            const result = await getProducts.getProducts();
+//         it('retorna um array', async () => {
+//             const result = await teste.getProducts();
 
-            expect(result).to.be.an('array');
-        });
-        it('retorna um array vazio', async () => {
-            const result = await getProducts.getProducts();
+//             expect(result).to.be.an('array');
+//         });
+//         it('retorna um array vazio', async () => {
+//             const [result] = await teste.getProducts();
+//             console.log(result);
 
-            expect(result).to.be.empty;
-        });
-    });
-    describe('Quando existe produtos cadastrados', () => {
 
-        const resultExecute = [{
-            id: 1,
-            name: 'telefone',
-            quantity: 10,
-        }]
+//             expect(result).to.be.empty;
+//         });
+//     });
+//     describe('Quando existe produtos cadastrados', () => {
 
-        before(() => {
-            sinon.stub(connection, 'execute').resolves([resultExecute]);
-        });
+//         const resultExecute = [{
+//             id: 1,
+//             name: 'telefone',
+//             quantity: 10,
+//         }]
 
-        after(() => {
-            connection.execute.restore();
-        })
+//         before(() => {
+//             sinon.stub(connection, 'execute').resolves([resultExecute]);
+//         });
 
-        it('retorna um array que possui objetos', async () => {
-            const [result] = await getProducts.getProducts();
+//         after(() => {
+//             connection.execute.restore();
+//         })
 
-            expect(result).to.be.an('object');
-        });
-        it('o objeto possui os atributos id, name e quantity ', async () => {
-            const [result] = await getProducts.getProducts();
+//         it('retorna um array que possui objetos', async () => {
+//             const [result] = await getProducts.getProducts();
 
-            expect(result).to.be.includes.all.keys(
-                'id',
-                'name',
-                'quantity'
-            );
-        })
-    })
-    describe('Busca por produto cadastrado por id', () => {
+//             expect(result).to.be.an('object');
+//         });
+//         it('o objeto possui os atributos id, name e quantity ', async () => {
+//             const [result] = await getProducts.getProducts();
 
-        const resultExecute = [{
-            id: 1,
-            name: 'telefone',
-            quantity: 10,
-        }]
+//             expect(result).to.be.includes.all.keys(
+//                 'id',
+//                 'name',
+//                 'quantity'
+//             );
+//         })
+//     })
+//     describe('Busca por produto cadastrado por id', () => {
 
-        before(() => {
-            sinon.stub(connection, 'execute').resolves([resultExecute]);
-        });
+//         const resultExecute = [{
+//             id: 1,
+//             name: 'telefone',
+//             quantity: 10,
+//         }]
 
-        after(() => {
-            connection.execute.restore();
-        })
+//         before(() => {
+//             sinon.stub(getProducts, 'getProductsById').resolves(resultExecute);
+//         });
 
-        // it('retorna um array', () => {});
-        // it('retorna um array nao vazio', () => {});
-        it('retorna um array que possui objetos', async () => {
-            const result = await getProducts.getProductsById(1);
+//         after(() => {
+//             getProducts.getProductsById.restore();
+//         })
 
-            expect(result).to.be.an('object');
-        });
-        it('o objeto possui os atributos id, name e quantity ', async () => {
-            const result = await getProducts.getProductsById(1);
+//         // it('retorna um array', () => {});
+//         // it('retorna um array nao vazio', () => {});
+//         it('retorna um array que possui objetos', async () => {
+//             const [result] = await getProducts.getProductsById(1);
 
-            expect(result).to.be.includes.all.keys(
-                'id',
-                'name',
-                'quantity'
-            );
-        })
-    })
-    describe('Verifica se é possivel adicionar um produto', () => {
+//             expect(result).to.be.an('object');
+//         });
+//         it('o objeto possui os atributos id, name e quantity ', async () => {
+//             const [result] = await getProducts.getProductsById(1);
 
-        const resultExecute = [{
-            id: 1,
-            name: 'telefone',
-            quantity: 10,
-        },
-        {
-            id: 2,
-            name: "Marreta do chapolin",
-            quantity: 5
-        }]
+//             expect(result).to.be.includes.all.keys(
+//                 'id',
+//                 'name',
+//                 'quantity'
+//             );
+//         })
+//     })
+//     describe('Verifica se é possivel adicionar um produto', () => {
 
-        const newProduct = {
-            "id": 2,
-            "name": "Marreta do chapolin",
-            "quantity": 5
-        }
+//         const resultExecute = [{
+//             id: 1,
+//             name: 'telefone',
+//             quantity: 10,
+//         },
+//         {
+//             id: 2,
+//             name: "Marreta do chapolin",
+//             quantity: 5
+//         }]
 
-        before(() => {
-            sinon.stub(connection, 'execute').resolves([resultExecute, newProduct]);
-        });
+//         const newProduct = {
+//             "id": 2,
+//             "name": "Marreta do chapolin",
+//             "quantity": 5
+//         }
 
-        after(() => {
-            connection.execute.restore();
-        })
+//         before(() => {
+//             sinon.stub(getProducts, 'addProduct').resolves([resultExecute, newProduct]);
+//         });
 
-        // it('retorna um array', () => {});
-        // it('retorna um array nao vazio', () => {});
-        it('retorna um array que possui objetos', async () => {
-            const result = await getProducts.addProduct();
+//         after(() => {
+//             getProducts.addProduct.restore();
+//         })
 
-            expect(result).to.be.length(2);
-        });
-        // it('o objeto possui os atributos telefone e Marreta do chapolin ', async () => {
-        //     const result = await getProducts.addProduct();
+//         // it('retorna um array', () => {});
+//         // it('retorna um array nao vazio', () => {});
+//         it('retorna um array que possui objetos', async () => {
+//             const result = await getProducts.addProduct();
 
-        //     expect(result.productsListName[0]).to.equal(
-        //         'telefone',
-        //     );
-        //     expect(result.productsListName[1]).to.equal(
-        //         'Marreta do chapolin'
-        //     );
-        // })
-    })
-    describe('Verifica se é possivel deletar um produto', () => {
+//             expect(result).to.be.length(2);
+//         });
+//         // it('o objeto possui os atributos telefone e Marreta do chapolin ', async () => {
+//         //     const result = await getProducts.addProduct();
 
-        const resultExecute = [{
-            id: 1,
-            name: 'telefone',
-            quantity: 10,
-        },
-        {
-            id: 2,
-            name: "Marreta do chapolin",
-            quantity: 5
-        }]
+//         //     expect(result.productsListName[0]).to.equal(
+//         //         'telefone',
+//         //     );
+//         //     expect(result.productsListName[1]).to.equal(
+//         //         'Marreta do chapolin'
+//         //     );
+//         // })
+//     })
+//     describe('Verifica se é possivel deletar um produto', () => {
 
-        const newProduct = {
-            "id": 2,
-            "name": "Marreta do chapolin",
-            "quantity": 5
-        }
+//         const resultExecute = [1]
+//         // const resultExecute = [{
+//         //     id: 1,
+//         //     name: 'telefone',
+//         //     quantity: 10,
+//         // },
+//         // {
+//         //     id: 2,
+//         //     name: "Marreta do chapolin",
+//         //     quantity: 5
+//         // }]
 
-        before(() => {
-            sinon.stub(connection, 'execute').resolves([resultExecute, newProduct]);
-        });
+//         const newProduct = {
+//             "id": 2,
+//             "name": "Marreta do chapolin",
+//             "quantity": 5
+//         }
+//         // const resultExecute = {status: 200, message: resultProducts}
+//         const resultotExecute = {status: 404, message: 'Product not found'}
 
-        after(() => {
-            connection.execute.restore();
-        })
+//         before(() => {
+//             sinon.stub(getProducts, 'deleteProduct').resolves([resultExecute, newProduct, resultotExecute]);
+//         });
 
-        // it('retorna um array', () => {});
-        // it('retorna um array nao vazio', () => {});
-        it('retorna um array que possui objetos', async () => {
-            const result = await getProducts.deleteProduct(2);
-            console.log(newProduct);
+//         after(() => {
+//             getProducts.deleteProduct.restore();
+//         })
 
-            expect(result).to.be.length(1);
-        });
-        it('o objeto possui os atributos telefone e Marreta do chapolin ', async () => {
-            const [result] = await getProducts.deleteProduct(2);
+//         // it('retorna um array', () => {});
+//         // it('retorna um array nao vazio', () => {});
+//         it('retorna um array que possui objetos', async () => {
+//             const result = await getProducts.deleteProduct(3);
+            
+//             expect(result[2].status).to.be.equal(404);
+//             expect(result[2].message).to.be.equal( 'Product not found');  
+//         });
+//         it('o objeto possui os atributos telefone e Marreta do chapolin ', async () => {
+//             const result = await getProducts.deleteProduct(2);
+//             console.log(result[0]);
 
-            expect(result.name).to.equal(
-                'telefone',
-            );
-        })
-    })
-    describe('Verifica se é possivel atualizar um produto', () => {
+//             expect(result[0][0]).to.be.equal(1);
+//         })
+//     })
+//     // describe('Verifica se é possivel atualizar um produto', () => {
 
-        const newProduct = [{
-            id: 1,
-            name: 'telefone celular',
-            quantity: 10,
-        }];
+//     //     const newProduct = [{
+//     //         id: 1,
+//     //         name: 'telefone celular',
+//     //         quantity: 10,
+//     //     }];
 
-        before(() => {
-            sinon.stub(connection, 'execute').resolves([ newProduct]);
-        });
+//     //     before(() => {
+//     //         sinon.stub(connection, 'execute').resolves([ newProduct]);
+//     //     });
 
-        after(() => {
-            connection.execute.restore();
-        })
+//     //     after(() => {
+//     //         connection.execute.restore();
+//     //     })
 
-        it('retorna um array que possui objetos', async () => {
-            const result = await getProducts.toUpdateProduct(1);
+//     //     it('retorna um array que possui objetos', async () => {
+//     //         const result = await getProducts.toUpdateProduct(1);
 
-            expect(result.productUpdated[0].name).to.be.equal('telefone celular');
-        });
-    })
+//     //         expect(result.productUpdated[0].name).to.be.equal('telefone celular');
+//     //     });
+//     // })
     
     
-})
+// })

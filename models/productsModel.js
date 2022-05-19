@@ -44,13 +44,10 @@ const toUpdateProduct = async (name, quantity, id) => {
 };
 
 const deleteProduct = async (id) => {
-    console.log('chamou model');
-
     const query = 'DELETE FROM StoreManager.products WHERE id=?';
     await connection.execute(query, [id]);
 
     const products = await getProducts();
-    console.log(products);
     const productsIds = products.map((ids) => ids.id);
     return productsIds;
 };

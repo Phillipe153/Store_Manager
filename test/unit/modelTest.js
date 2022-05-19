@@ -100,7 +100,7 @@ describe('Busca os produtos cadastrados', () => {
             quantity: 10,
         },
         {
-            id: 4,
+            id: 2,
             name: "Marreta do chapolin",
             quantity: 5
         }]
@@ -137,5 +137,67 @@ describe('Busca os produtos cadastrados', () => {
             );
         })
     })
+    describe('Verifica se é possivel deletar um produto', () => {
+
+        const newProduct = [{
+            id: 1,
+            name: 'telefone',
+            quantity: 10,
+        }];
+
+        before(() => {
+            sinon.stub(connection, 'execute').resolves([ newProduct]);
+        });
+
+        after(() => {
+            connection.execute.restore();
+        })
+
+        // it('retorna um array', () => {});
+        // it('retorna um array nao vazio', () => {});
+        it('retorna um array que possui objetos', async () => {
+            const result = await getProducts.deleteProduct(2);
+            console.log(result);
+
+            expect(result).to.be.length(1);
+        });
+        it('o objeto possui os atributos telefone e Marreta do chapolin ', async () => {
+            const [result] = await getProducts.deleteProduct(2);
+
+            expect(result).to.equal(
+                1,
+            );
+        })
+    })
+    describe('Verifica se é possivel atualizar um produto', () => {
+
+        const newProduct = [{
+            id: 1,
+            name: 'telefone celular',
+            quantity: 10,
+        }];
+
+        before(() => {
+            sinon.stub(connection, 'execute').resolves([ newProduct]);
+        });
+
+        after(() => {
+            connection.execute.restore();
+        })
+
+        it('retorna um array que possui objetos', async () => {
+            const result = await getProducts.toUpdateProduct(1);
+
+            expect(result.productUpdated[0].name).to.be.equal('telefone celular');
+        });
+        // it('o objeto possui os atributos telefone e Marreta do chapolin ', async () => {
+        //     const [result] = await getProducts.toUpdateProduct(1);
+
+        //     expect(result).to.equal(
+        //         1,
+        //     );
+        // })
+    })
+    
     
 })

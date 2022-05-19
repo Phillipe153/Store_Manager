@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "posttest": "node ./test/restoreDb.js",
+    "teste": "mocha ./test/unit/*.js",
     "test": "jest --runInBand --testTimeout=60000",
     "test:mocha": "nyc --all --include models --include services --include controllers mocha test/unit/**/*.js --exit",
     "start": "node index.js",

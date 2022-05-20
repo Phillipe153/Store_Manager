@@ -297,71 +297,72 @@ describe('Model: Busca os vendas cadastrados', () => {
             );
         })
     })
-    describe('Verifica se é possivel adicionar uma venda', () => {
-        const id = 2;
-        const newId =3;
-        const promisses = [
-            {
-              "productId": 1,
-              "quantity": 20
-            },
-            {
-              "productId": 2,
-              "quantity": 55
-            }
-          ];
-        const resultExecute = {
-            "id": 3,
-            "itemsSold": [
-                {
-                    "productId": 1,
-                    "quantity": 20
-                },
-                {
-                    "productId": 2,
-                    "quantity": 55
-                }
-            ]
-        }
+    // describe('Verifica se é possivel adicionar uma venda', () => {
+    //     const id = 2;
+    //     const newId =3;
+    //     const promisses = [
+    //         {
+    //           "productId": 1,
+    //           "quantity": 20
+    //         },
+    //         {
+    //           "productId": 2,
+    //           "quantity": 55
+    //         }
+    //       ];
+    //     const resultExecute = {
+    //         "id": 3,
+    //         "itemsSold": [
+    //             {
+    //                 "productId": 1,
+    //                 "quantity": 20
+    //             },
+    //             {
+    //                 "productId": 2,
+    //                 "quantity": 55
+    //             }
+    //         ]
+    //     }
 
-        const newSale =  [
-            {
-              "productId": 1,
-              "quantity": 20
-            },
-            {
-              "productId": 2,
-              "quantity": 55
-            }
-          ]
-        before(() => {
-            sinon.stub(getSales, 'addSale').resolves([resultExecute]);
-        });
+    //     const newSale =  [
+    //         {
+    //           "productId": 1,
+    //           "quantity": 20
+    //         },
+    //         {
+    //           "productId": 2,
+    //           "quantity": 55
+    //         }
+    //       ]
+          
+    //     before(() => {
+    //         sinon.stub(getSales, 'addSale').resolves([resultExecute]);
+    //     });
 
-        after(() => {
-            getSales.addSale.restore();
-        })
+    //     after(() => {
+    //         getSales.addSale.restore();
+    //     })
 
-        // it('retorna um array', () => {});
-        // it('retorna um array nao vazio', () => {});
-        // it('retorna um array que possui objetos', async () => {
-        //     const [result] = await getSales.addSale(newSale);
+    //     // it('retorna um array', () => {});
+    //     // it('retorna um array nao vazio', () => {});
+    //     // it('retorna um array que possui objetos', async () => {
+    //     //     const [result] = await getSales.addSale(newSale);
         
-        //     expect(result.newSale).to.be.length(2);
-        // });
-        it('o objeto possui os atributos telefone e Marreta do chapolin ', async () => {
-            const [result] = await getSales.addSale(newSale);
-                console.log(result);
+    //     //     expect(result.newSale).to.be.length(2);
+    //     // });
+    //     it('verifica se retorna um id e itemsSold ', async () => {
+    //         const [result] = await getSales.addSale(newSale);
+    //             console.log(result);
 
-            expect(result).to.be.includes.all.keys(
-                'id',
-                'itemsSold'
-            );
-            // expect(result).to.equal(
-            //     'Marreta do chapolin'
-            // );
-        })
-    })
+    //         expect(result).to.be.includes.all.keys(
+    //             'id',
+    //             'itemsSold'
+    //         );
+    //         // expect(result).to.equal(
+    //         //     'Marreta do chapolin'
+    //         // );
+    //     })
+    // })
     // describe('Verifica se é possivel deletar um produto', () => {
 
     //     const newProduct = [{

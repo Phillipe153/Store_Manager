@@ -7,6 +7,7 @@ const erroHandler = (status, message) => ({
   });
 const getProducts = async () => {
     const getAll = await model.getProducts();
+    // console.log(getAll);
     return getAll;
 };
 

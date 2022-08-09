@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "posttest": "node ./test/restoreDb.js",
-    "teste": "mocha ./test/unit/*.js",
+    "teste": "mocha ./test/**/*$NAME*.test.js --exit",
     "test": "jest --runInBand --testTimeout=60000",
     "test:mocha": "nyc --all --include models --include services --include controllers mocha test/unit/**/*.js --exit",
     "start": "node index.js",
@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
     "eslint-config-trybe-backend": "^1.0.3",
     "frisby": "^2.1.2",
     "jest": "^26.4.1",

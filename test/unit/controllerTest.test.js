@@ -1,7 +1,14 @@
-const { expect } = require('chai');
+const chai = require('chai');
+const { expect } = chai;
 const sinon = require('sinon');
+const chaiHttp = require('chai-http');
+chai.use(chaiHttp);
+const index = require('../../app')
 const connection = require('../../models/connection');
 const getProducts = require('../../controllers/indexController');
+const postProduct = require('../../controllers/indexController');
+
+const addProduct = require('../../models/productsModel');
 const teste = require('../../services/productsService');
 const getSales = require('../../controllers/indexController');
 const testeSales = require('../../services/salesService')
@@ -45,7 +52,6 @@ describe('Controller: Busca os produtos cadastrados', () => {
         it('retorna um array', async () => {
 
             const result = await getProducts.getProducts(req, res);
-            console.log(res.status);
 
             expect(res.status.calledWith(200)).to.be.eq(true);
 
@@ -143,13 +149,13 @@ describe('Controller: Busca os produtos cadastrados', () => {
     
      })
     })
-    describe('Verifica se é possivel adicionar um produto', () => {
+    describe.only('Verifica se é possivel adicionar um produto', () => {
 
         const resultReturn = 
         {
-            id: 2,
-            name: "Marreta do chapolin",
-            quantity: 5
+            "id": 2,
+            "name": "Marreta do chapolin",
+            "quantity": 5
         };
 
         const newProduct = {
@@ -162,26 +168,93 @@ describe('Controller: Busca os produtos cadastrados', () => {
      
         before(() => {
             
-            sinon.stub(getProducts, 'postProduct').resolves(resultExecute );
+            sinon.stub(teste, 'addProduct').resolves(resultExecute );
+            sinon.stub(teste, 'getProductsById').resolves(resultExecute[0] );
         });
         
         after(() => {
-            getProducts.postProduct.restore();
+            teste.addProduct.restore();
+            teste.getProductsById.restore();
         })
         
-        it('retorna um array que possui objetos', async () => {
-            const [result] = await getProducts.postProduct(newProduct);
-            console.log(result);
+      
+        it('retorna uma mensagem de erro ao cadastrar sem o campo do nome', async () => {
 
-            expect(result.status).to.be.equal(200);
-            expect(result.message).to.be.equal(resultReturn);
+            response = await chai.request(index)
+            .post('/products')
+            .send({
+                
+                quantity: 5
+            })
+
+            expect(response.status).to.be.equal(400);
+            expect(response.body.message).to.be.eq('\"name\" is required');
+    
+        });
+        it('retorna uma mensagem de erro ao cadastrar sem o campo do quantity', async () => {
+
+            response = await chai.request(index)
+            .post('/products')
+            .send({
+                name: "Marreta do chapolin"
+            })
+
+
+            expect(response.status).to.be.equal(400);
+            expect(response.body.message).to.be.eq('\"quantity\" is required');
+    
+        });
+        it('retorna uma mensagem de erro ao cadastrar o campo do nome menor que 5 caracteres', async () => {
+
+            response = await chai.request(index)
+            .post('/products')
+            .send({
+                name: "Mar"
+            })
+
+
+            expect(response.status).to.be.equal(422);
+            expect(response.body.message).to.be.eq('\"name\" length must be at least 5 characters long');
+    
+        });
+        it('retorna uma mensagem de erro ao cadastrar o campo do quantity menor que 1', async () => {
+
+            response = await chai.request(index)
+            .post('/products')
+            .send({
+                name: "Marreta do chapolin",
+                quantity: 0
+            })
+
+
+            expect(response.status).to.be.equal(422);
+            expect(response.body.message).to.be.eq('\"quantity\" must be greater than or equal to 1');
+    
+        });
+
+
+        it('retorna um array que possui objetos', async () => {
+
+            response = await chai.request(index)
+            .post('/products')
+            .send({
+                name: "Marreta do chapolin",
+                quantity: 5
+            })
+
+            expect(response.body.status).to.be.equal(200);
+            expect(response.body.message).to.be.eqls(resultReturn);
     
         });
         it('o objeto possui os atributos telefone e Marreta do chapolin ', async () => {
-            const [result] = await getProducts.postProduct(newProduct);
-
+            response = await chai.request(index)
+            .post('/products')
+            .send({
+                name: "Marreta do chapolin",
+                quantity: 5
+            })
             
-            expect(result.message.name).to.equal(
+            expect(response.body.message.name).to.equal(
                 'Marreta do chapolin'
             );
         })

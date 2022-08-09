@@ -6,7 +6,6 @@ const OK = 200;
 
 const getProducts = async (_req, res) => {
   const allProducts = await service.getProducts();
-  console.log(allProducts);
   return res.status(200).json(allProducts);
 };
 
@@ -14,6 +13,7 @@ const getProductsById = async (req, res) => {
   try {
     const { id } = req.params;
     const product = await service.getProductsById(id);
+
     return res.status(OK).json(product);
   } catch (err) {
     return res.status(err.status).json({ message: err.message });
@@ -22,11 +22,17 @@ const getProductsById = async (req, res) => {
 
 const postProduct = async (req, res) => {
   try {
+    console.log(1);
+
     const { name, quantity } = req.body;
     const newProduct = await service.addProduct(name, quantity);
     const newProductById = await service.getProductsById(newProduct.insertId);
+    console.log(2);
+
     return res.status(201).json(newProductById);
   } catch (err) {
+    console.log(3);
+
     return res.status(err.status).json({ message: err.message });
   }
 };

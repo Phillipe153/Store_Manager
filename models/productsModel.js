@@ -4,7 +4,6 @@ const connection = require('./connection');
 const getProducts = async () => {
     const query = 'SELECT * FROM StoreManager.products order by id';
     const [allProducts] = await connection.execute(query);
-    console.log(allProducts);
 
     return allProducts;
 };

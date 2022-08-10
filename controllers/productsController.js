@@ -28,8 +28,7 @@ const postProduct = async (req, res) => {
 
     return res.status(201).json(newProductById);
   } catch (err) {
-    console.log(3);
-
+    console.log(err);
     return res.status(err.status).json({ message: err.message });
   }
 };
@@ -54,7 +53,6 @@ const deleteProduct = async (req, res) => {
     await service.deleteProduct(id);
     return res.status(204).json({});
   } catch (err) {
-    console.log('chmaou err');
     return res.status(err.status).json({ message: err.message });
   }
 };

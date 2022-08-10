@@ -10,7 +10,9 @@ const postProduct = require('../../controllers/indexController');
 
 const addProduct = require('../../models/productsModel');
 const teste = require('../../services/productsService');
-const addProductModel = require('../../models/productsModel');
+const ProductModel = require('../../models/productsModel');
+
+
 
 const getSales = require('../../controllers/indexController');
 const testeSales = require('../../services/salesService')
@@ -109,65 +111,83 @@ describe('Controller: Busca os produtos cadastrados', () => {
 
     //     })
     // })
-    describe('Controller:  Buscando produto por um id', () => {
+    describe('Controller:  Buscando produto por um id', async () => {
 
 
-        const res ={};
-        const req ={};
-
-
-        const resultProducts =[
+        const resultProducts =
             {
                 "id": 1,
                 "name": "Martelo de Thor",
              "quantity": 10
          }
-     ];
-    //  const resultExecute = {status: 200, message: resultProducts}
-    //  const resultotExecute = {status: 404, message: 'Product not found'}
+     
 
     
      before(() => {
-        res.status = sinon.stub().returns(res);
-        res.json = sinon.stub().returns();
 
-        sinon.stub(teste, 'getProducts').resolves( resultProducts);
+        sinon.stub(teste, 'getProductsById').resolves( resultProducts);
     });
 
     after(() => {
-        teste.getProducts.restore();
+        teste.getProductsById.restore();
     })
+
+   
     
-    //  it('retorna um array que possui objetos', async () => {
-    //      const result = await getProducts.getProductsById(2);
-    //      console.log;
-    //      expect(result[1].status).to.be.equal(404);
-    //      expect(result[1].message).to.be.equal( 'Product not found');
-    //  });
      it('o objeto possui os atributos id, name e quantity ', async () => {
-         const result = await getProducts.getProductsById(req, res);
-         expect(res.status.calledWith(404)).to.be.eq(false);
+        response = await chai.request(index)
+        .get('/products/1')
+
+        console.log(response.body);
+
+        expect(response.status).to.be.equal(200);
+        expect(response.body).to.be.includes.key('id', 'name', 'quantity');
 
     
      })
     })
 
-    describe('Verifica se é possivel adicionar um produto', () => {
+    describe('Controller:  Buscando produto por um id que nao existe', async () => {
+
+        before(() => {
+            
+            sinon.stub(ProductModel, 'getProductsById').callsFake(() => {
+                throw {status: 404, message: 'Product not found'}
+            } );
+
+        });
+        
+        after(() => {
+            ProductModel.getProductsById.restore();
+
+        })
+        
+        it('retorna uma mensagem de erro ao cadastrar um produto ja existente', async () => {
+
+            response = await chai.request(index)
+            .get('/products/1')
+
+            expect(response.status).to.be.equal(404);
+    
+        });
+    })
+
+
+    describe('Verifica se é possivel adicionar um produto ja existente', () => {
 
         
-        const resultExecute = [{status: 409, message: 'Product already exists'}]
 
      
         before(() => {
             
-            sinon.stub(addProductModel, 'addProduct').callsFake(() => {
+            sinon.stub(ProductModel, 'addProduct').callsFake(() => {
                 throw {status: 409, message: 'Product already exists'}
             } );
 
         });
         
         after(() => {
-            addProductModel.addProduct.restore();
+            ProductModel.addProduct.restore();
 
         })
         
@@ -179,10 +199,8 @@ describe('Controller: Busca os produtos cadastrados', () => {
                 name: "Marreta do chapolin",
                 quantity: 5
             })
-            console.log(response.body);
 
             expect(response.status).to.be.equal(409);
-            // expect(response.body.message).to.be.eq('\"name\" is required');
     
         });
     });
@@ -300,31 +318,54 @@ describe('Controller: Busca os produtos cadastrados', () => {
         })
     })
     describe('Verifica se é possivel deletar um produto', () => {
-        const resultReturn2 = {}
-        const resultExecute = [{status: 200, message: {}}]
 
+        const resultExecute = [{status: 200, message:{} }]
 
         before(() => {
-            sinon.stub(getProducts, 'deleteProduct').resolves(resultExecute);
+            sinon.stub(teste, 'deleteProduct').resolves(resultExecute);
         });
 
         after(() => {
-            getProducts.deleteProduct.restore();
+            teste.deleteProduct.restore();
         })
-
-        // it('retorna um array', () => {});
-        // it('retorna um array nao vazio', () => {});
         
-        it('o objeto possui os atributos telefone e Marreta do chapolin ', async () => {
-            const [result] = await getProducts.deleteProduct(2);
-            console.log(result);
+        it('Verifica se retorna um status 204 e um array vazio ', async () => {
+            response = await chai.request(index)
+            .delete('/products/1')
 
-            expect(result.status).to.be.equal(200);
-            expect(result.message).to.be.empty;
+            console.log('teste',response.status);
+           
+            expect(response.status).to.be.equal(204);
+            expect(response.body).to.be.empty;
             
         })
     })
-    describe('Verifica se é possivel atualizar um produto', () => {
+    describe('Verifica se é possivel deletar um produto nao existente', () => {
+
+
+        before(() => {
+            sinon.stub(teste, 'deleteProduct').callsFake(() => {
+                throw {status: 404, message: 'Product not found'}
+            } );
+        })
+
+        after(() => {
+            teste.deleteProduct.restore();
+        })
+        
+        it('Verifica se retorna um status 204 e um array vazio ', async () => {
+            response = await chai.request(index)
+            .delete('/products/1')
+
+            console.log('teste',response.status);
+           
+            expect(response.status).to.be.equal(404);
+            // expect(response.body).to.be.empty;
+            
+        })
+    })
+    
+    describe('Verifica se é possivel atualizar um produto', async () => {
 
         const newProduct = [{
             id: 1,
@@ -344,10 +385,46 @@ describe('Controller: Busca os produtos cadastrados', () => {
         })
 
         it('retorna um array que possui objetos', async () => {
-            const [result] = await getProducts.putProduct(1);
-            console.log(result.message[0].name);
+            response = await chai.request(index)
+            .put('/products/1')
+            .send({
+                name: "Marreta do chapolin",
+                quantity: 10
+            })
+            
 
-            expect(result.message[0].name).to.be.equal('telefone celular');
+        });
+    })
+    describe('Verifica se é possivel atualizar um produto que nao existe', async () => {
+
+        const newProduct = [{
+            id: 1,
+            name: 'telefone celular',
+            quantity: 10,
+        }];
+
+
+
+        before(() => {
+            sinon.stub(getProducts, 'putProduct').callsFake(() => {
+                throw {status: 404, message: 'Product not found'}
+            } );
+
+        });
+
+        after(() => {
+            getProducts.putProduct.restore();
+        })
+
+        it('retorna um array que possui objetos', async () => {
+            response = await chai.request(index)
+            .put('/products/1')
+            .send({
+                name: "Marreta do chapolin",
+                quantity: 10
+            })
+            
+
         });
     })
     describe('Quando existe vendas cadastradas', () => {

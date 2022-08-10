@@ -22,12 +22,9 @@ const getProductsById = async (req, res) => {
 
 const postProduct = async (req, res) => {
   try {
-    console.log(1);
-
     const { name, quantity } = req.body;
     const newProduct = await service.addProduct(name, quantity);
     const newProductById = await service.getProductsById(newProduct.insertId);
-    console.log(2);
 
     return res.status(201).json(newProductById);
   } catch (err) {

@@ -10,6 +10,8 @@ const postProduct = require('../../controllers/indexController');
 
 const addProduct = require('../../models/productsModel');
 const teste = require('../../services/productsService');
+const addProductModel = require('../../models/productsModel');
+
 const getSales = require('../../controllers/indexController');
 const testeSales = require('../../services/salesService')
 
@@ -149,7 +151,43 @@ describe('Controller: Busca os produtos cadastrados', () => {
     
      })
     })
-    describe.only('Verifica se é possivel adicionar um produto', () => {
+
+    describe('Verifica se é possivel adicionar um produto', () => {
+
+        
+        const resultExecute = [{status: 409, message: 'Product already exists'}]
+
+     
+        before(() => {
+            
+            sinon.stub(addProductModel, 'addProduct').callsFake(() => {
+                throw {status: 409, message: 'Product already exists'}
+            } );
+
+        });
+        
+        after(() => {
+            addProductModel.addProduct.restore();
+
+        })
+        
+        it('retorna uma mensagem de erro ao cadastrar um produto ja existente', async () => {
+
+            response = await chai.request(index)
+            .post('/products')
+            .send({
+                name: "Marreta do chapolin",
+                quantity: 5
+            })
+            console.log(response.body);
+
+            expect(response.status).to.be.equal(409);
+            // expect(response.body.message).to.be.eq('\"name\" is required');
+    
+        });
+    });
+
+    describe('Verifica se é possivel adicionar um produto', () => {
 
         const resultReturn = 
         {
@@ -170,14 +208,16 @@ describe('Controller: Busca os produtos cadastrados', () => {
             
             sinon.stub(teste, 'addProduct').resolves(resultExecute );
             sinon.stub(teste, 'getProductsById').resolves(resultExecute[0] );
+          
         });
         
         after(() => {
             teste.addProduct.restore();
             teste.getProductsById.restore();
-        })
-        
-      
+
+        })       
+       
+
         it('retorna uma mensagem de erro ao cadastrar sem o campo do nome', async () => {
 
             response = await chai.request(index)

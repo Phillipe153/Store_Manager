@@ -1,4 +1,4 @@
-Storage Manager com JavaScript, MySQL, Sequelize e API REST
+# Storage Manager com JavaScript, MySQL, Sequelize e API REST
 
 Este projeto é uma aplicação de gerenciamento de vendas, construída com JavaScript, MySQL, Sequelize e API REST. Com ele, você pode gerenciar clientes, produtos e vendas, criando, lendo, atualizando e excluindo dados do banco de dados.
 
